@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sudoku Solver</title>
+  <style>
+    table {
+        border: 3px solid black;
+        border-collapse: collapse;
+    }
+
+    tr {
+        padding: 0;
+    }
+
+    td {
+        width: 64px;
+        height: 64px;
+        padding: 0;
+        border: 1px solid gray;
+        text-align: center;
+        vertical-align: center;
+        font-size: 1.5em;
+    }
+
+    td.subsquare {
+        border-right: 3px solid black;
+        border-bottom: 3px solid black;
+    }
+
+    tr.box-bottom td {
+        border-bottom: 3px solid black;
+    }
+
+    td.box-side {
+        border-right: 3px solid black;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sudoku Solver</h1>
+  <table id="sudoku-table">
+    {% for row in puzzle %}
+    {% if loop.index % size == 0 %}
+    <tr class="box-bottom">
+    {% else %}
+    <tr>
+    {% endif %}
+      {% for cell in row %}
+      {% if loop.index % size == 0 %}
+      <td class="box-side">
+      {% else %}
+      <td>
+      {% endif %}
+      {{ cell if cell != None else '' }}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  <script>
+    // pase the solution as JSON so it can be used in this script
+    var solution = JSON.parse('{{solution | tojson | safe}}');
+
+    // set the index to 0 and table to the sudoku table
+    var index = 0;
+    var table = document.getElementById("sudoku-table");
+
+    // changes all empty cells on the board to have their value from the solution
+    function fullPuzzle() {
+      for (var varName in solution) {
+        var value = solution[varName][0];
+        var row = parseInt(varName[1]) - 1;
+        var col = parseInt(varName[2]) - 1;
+        var cell = table.rows[row].cells[col];
+        if (cell.textContent.trim() === '') {
+          cell.textContent = value;
+          cell.style.color = 'red';
+        } 
+      }
+    }
+
+    // shows the solution when the page loads
+    window.onload = fullPuzzle;
+
+    // if the current index of the assignmentOrder is less than the number of assignments in the assignment order, increment the index by 1 and update the puzzle
+    function nextStep() {
+      if (index < assignmentOrder.length) {
+        index++;
+        updatePuzzle();
+      }
+    }
+  </script>
+</body>
+</html>
