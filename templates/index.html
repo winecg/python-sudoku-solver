@@ -59,10 +59,10 @@
     {% endfor %}
   </table>
   <script>
-    // pase the solution as JSON so it can be used in this script
+    // pass the solution as JSON so it can be used in this script
     var solution = JSON.parse('{{solution | tojson | safe}}');
 
-    // set the index to 0 and table to the sudoku table
+    // sets the index to 0 and table to the sudoku table
     var index = 0;
     var table = document.getElementById("sudoku-table");
 
